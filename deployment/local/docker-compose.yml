@@ -1,0 +1,10 @@
+services:
+  memcached:
+    image: bitnami/memcached:latest
+    ports:
+      - "11211:11211"
+    environment:
+      MEMCACHED_USERNAME: dev
+      MEMCACHED_PASSWORD: dev
+
+      

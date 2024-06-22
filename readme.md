@@ -1,6 +1,7 @@
 Running app: bundle exec falcon serve --bind http://localhost:9292
 Temp bound to http://localhost:9292 in order to mitigate the SSL error.
 
+Dev hot reload: RACK_ENV=development bundle exec falcon serve --bind http://localhost:9292
 
 how to set all env variables and load at app start
 create caching middleware instead of calling in app.rb
@@ -15,6 +16,8 @@ headers
 security
 pricing
 memberships
+upload TTL
+upload max downloads
 
 
 BUGS:

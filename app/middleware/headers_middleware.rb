@@ -15,8 +15,6 @@ class HeadersMiddleware
     headers['X-XSS-Protection'] = '1; mode=block'
     headers['X-Originating-IP'] = originating_ip
     
-    puts headers.inspect
-    
     [status, headers, response]
   end
 

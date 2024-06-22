@@ -1,11 +1,20 @@
 require 'sinatra/base'
+require 'sinatra/content_for'
 require 'falcon'
 require_relative 'app/config/environment'
 require_relative 'app/handlers/file_handler'
 require_relative 'app/middleware/caching_middleware'
 require_relative 'app/middleware/headers_middleware'
 
+MAX_UPLOAD_SIZE = 5 * 1024 * 1024  # 5 MB
+
 class Anonymoose < Sinatra::Base
+  helpers Sinatra::ContentFor
+
+  configure :development do
+    register Sinatra::Reloader
+  end
+
   use CachingMiddleware
   use HeadersMiddleware
 
@@ -19,6 +28,16 @@ class Anonymoose < Sinatra::Base
 
   post '/upload' do
     file = params[:file]
+    if file.nil?
+      @error_message = 'No file received'
+      return erb :upload
+    end
+
+    file_size = file[:tempfile].size
+    if file_size > MAX_UPLOAD_SIZE
+      @error_message = "File size exceeds the maximum limit of #{MAX_UPLOAD_SIZE / 1024 / 1024} MB"
+      return erb :upload
+    end
     if file
       puts "Received file upload request: #{file.inspect}"
       file_handler = FileHandler.new(file, env['cache'])
@@ -28,11 +47,13 @@ class Anonymoose < Sinatra::Base
         erb :upload_success, locals: { link: hashed_link }
       else
         puts "File upload failed"
-        "File upload failed. Please upload a valid file."
+        @error_message = "File upload failed. Please upload a valid file."
+        erb :upload
       end
     else
       puts "No file received"
-      "No file received"
+      @error_message = "No file received"
+      erb :upload
     end
   end
 
@@ -47,10 +68,12 @@ class Anonymoose < Sinatra::Base
       if File.exist?(filepath)
         send_file filepath, disposition: 'attachment', filename: original_name, type: 'application/octet-stream'
       else
-        halt 404, 'File not found'
+        status 404
+        erb :error
       end
     else
-      halt 404, 'File not found'
+      status 404
+      erb :error
     end
   end
 end

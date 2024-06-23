@@ -5,14 +5,14 @@ require 'fileutils'
 require 'securerandom'
 
 class FileHandlerTest < Minitest::Test
-  UPLOAD_DIR = 'uploads'  # Ensure this matches your actual upload directory
+  UPLOAD_DIR = 'uploads'
 
   def setup
     @cache = Dalli::Client.new('localhost:11211', username: ENV['MEMCACHED_USERNAME'], password: ENV['MEMCACHED_PASSWORD'])
     @file = { filename: 'test.txt', tempfile: Tempfile.new('test.txt') }
     @file[:tempfile].write('test content')
     @file[:tempfile].rewind
-    FileUtils.mkdir_p(UPLOAD_DIR)
+    FileUtils.mkdir_p(UPLOAD_DIR) # Ensure the uploads directory exists
   end
 
   def teardown
@@ -20,6 +20,7 @@ class FileHandlerTest < Minitest::Test
     @file[:tempfile].unlink
     FileUtils.rm_rf(UPLOAD_DIR)
     @cache.flush_all  # Clear cache after each test
+    sleep(1)  # Adding a small delay to ensure flush_all has taken effect
   end
 
   def test_file_save_and_cache
@@ -36,13 +37,15 @@ class FileHandlerTest < Minitest::Test
   end
 
   def test_ttl_expiration
-    ttl = 1  # 1 second TTL
+    ttl = 2  # 2 seconds TTL
     file_handler = FileHandler.new(@file, @cache, ttl)
     hash_name = file_handler.save
 
-    sleep(ttl + 2)  # Wait for TTL to expire
+    puts "Cached metadata: #{@cache.get(hash_name).inspect}"  # Debug log before sleep
+    sleep(ttl + 3)  # Wait for TTL to expire
 
     metadata = @cache.get(hash_name)
+    puts "Metadata after TTL: #{metadata.inspect}"  # Debug log after sleep
     assert_nil metadata, "Metadata should expire and be nil"
   end
 end

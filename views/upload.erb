@@ -8,11 +8,12 @@
   <input type="file" name="file">
   <label for="upload-expiration">Choose expiration:</label>
   <select name="expiration" id="expiration">
-    <option value="15">15 Minutes</option>
-    <option value="60">1 Hour</option>
-    <option value="240">4 Hours</option>
-    <option value="480">8 Hours</option>
-    <option value="1440">1 Day</option>
+    <option value="900">15 Minutes</option>
+    <option value="3600">1 Hour</option>
+    <option value="14400">4 Hours</option>
+    <option value="28800">8 Hours</option>
+    <option value="86400">1 Day</option>
+    <%# Need to mask this with an enum %>
   </select>
   <button type="submit">Upload</button>
 </form>

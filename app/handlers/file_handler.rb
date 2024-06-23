@@ -43,7 +43,8 @@ class FileHandler
 
   def cache_metadata(hash_name, unique_id, file_name)
     metadata = { file_name: file_name, unique_id: unique_id }
-    @cache.set(hash_name, metadata, @ttl * 60)
-    puts "Metadata cached: #{hash_name} -> #{metadata}"  # Debug log
+    # need to create an enum that answers what the tll will be instead of using a fixed value in upload.erb
+    @cache.set(hash_name, metadata, @ttl)
+    puts "Metadata cached: #{hash_name} -> #{metadata} with TTL #{@ttl}"  # Debug log
   end
 end

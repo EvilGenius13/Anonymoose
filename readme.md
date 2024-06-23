@@ -1,3 +1,6 @@
+# Anonymoose
+A quick file sharing service. Upload a file and get a link to share with others. The file will be deleted after a certain amount of time or after a certain number of downloads.
+
 Running app: bundle exec falcon serve --bind http://localhost:9292
 Temp bound to http://localhost:9292 in order to mitigate the SSL error.
 

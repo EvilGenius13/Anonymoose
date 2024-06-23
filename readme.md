@@ -34,3 +34,10 @@ should probably edit the dockerfile to only use essential files, dump the test f
 ### Testing:
 run `RACK_ENV=test rake test`
 
+
+### Production:
+Anonymoose runs in a microk8s kubernetes cluster
+Useful commands
+`microk8s kubectl apply -f example.yml -n your_namespace`
+`microk8s kubectl get deployments -n your_namespace`
+Essentially, throw `microk8s` in front of your normal `kubectl` commands.

@@ -5,7 +5,7 @@ require_relative '../../app'
 class AnonymooseTest < Minitest::Test
   include Rack::Test::Methods
 
-  UPLOAD_DIR = 'uploads'  # Ensure this matches your actual upload directory
+  UPLOAD_DIR = 'uploads'
 
   def app
     Anonymoose.new

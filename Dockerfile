@@ -44,6 +44,9 @@ WORKDIR /app
 # Copy application code from build stage
 COPY --from=builder /app /app
 
+# Install dependencies in the production stage
+RUN gem install bundler && bundle install --deployment --without development test
+
 # Create necessary directories
 RUN mkdir -p /app/uploads
 

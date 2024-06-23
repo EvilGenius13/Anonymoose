@@ -20,7 +20,7 @@ class FileHandlerTest < Minitest::Test
     @file[:tempfile].unlink
     FileUtils.rm_rf(UPLOAD_DIR)
     @cache.flush_all  # Clear cache after each test
-    sleep(1)  # Adding a small delay to ensure flush_all has taken effect
+    sleep(1)
   end
 
   def test_file_save_and_cache
@@ -41,11 +41,11 @@ class FileHandlerTest < Minitest::Test
     file_handler = FileHandler.new(@file, @cache, ttl)
     hash_name = file_handler.save
 
-    puts "Cached metadata: #{@cache.get(hash_name).inspect}"  # Debug log before sleep
+    # puts "Cached metadata: #{@cache.get(hash_name).inspect}"  # Debug log before sleep
     sleep(ttl + 3)  # Wait for TTL to expire
 
     metadata = @cache.get(hash_name)
-    puts "Metadata after TTL: #{metadata.inspect}"  # Debug log after sleep
+    # puts "Metadata after TTL: #{metadata.inspect}"  # Debug log after sleep
     assert_nil metadata, "Metadata should expire and be nil"
   end
 end

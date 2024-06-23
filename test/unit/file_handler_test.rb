@@ -5,13 +5,14 @@ require 'fileutils'
 require 'securerandom'
 
 class FileHandlerTest < Minitest::Test
-  UPLOAD_DIR = 'uploads'
+  UPLOAD_DIR = 'uploads'  # Ensure this matches your actual upload directory
 
   def setup
     @cache = Dalli::Client.new('localhost:11211', username: ENV['MEMCACHED_USERNAME'], password: ENV['MEMCACHED_PASSWORD'])
     @file = { filename: 'test.txt', tempfile: Tempfile.new('test.txt') }
     @file[:tempfile].write('test content')
     @file[:tempfile].rewind
+    FileUtils.mkdir_p(UPLOAD_DIR)
   end
 
   def teardown

@@ -12,6 +12,7 @@ class Anonymoose < Sinatra::Base
   helpers Sinatra::ContentFor
 
   configure :development do
+    require 'sinatra/reloader'
     register Sinatra::Reloader
   end
 

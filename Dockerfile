@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ \
     libclang-dev \
     libssl-dev \
+    libffi-dev \
+    make \
     && rm -rf /var/lib/apt/lists/* \
     && curl https://sh.rustup.rs -sSf | sh -s -- -y
 
@@ -25,12 +27,6 @@ RUN gem install bundler && bundle install
 # Copy the rest of the application code
 COPY . .
 
-# Set environment to test for running tests
-# ENV RACK_ENV=test
-
-# Run tests
-# RUN bundle exec rake test
-
 # Stage 2: Production
 FROM ruby:3.2.2-slim
 
@@ -38,13 +34,16 @@ FROM ruby:3.2.2-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libmemcached-dev \
     libssl-dev \
+    libffi-dev \
+    make \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy application code from build stage
+# Copy application code and installed gems from build stage
 COPY --from=builder /app /app
+COPY --from=builder /usr/local/bundle /usr/local/bundle
 
 # Install dependencies in the production stage
 RUN gem install bundler && bundle install --deployment --without development test

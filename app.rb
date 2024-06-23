@@ -27,6 +27,7 @@ class Anonymoose < Sinatra::Base
   end
 
   post '/upload' do
+    ttl = params[:expiration].to_i
     file = params[:file]
     if file.nil?
       @error_message = 'No file received'
@@ -40,7 +41,7 @@ class Anonymoose < Sinatra::Base
     end
     if file
       puts "Received file upload request: #{file.inspect}"
-      file_handler = FileHandler.new(file, env['cache'])
+      file_handler = FileHandler.new(file, env['cache'], ttl)
       hashed_link = file_handler.save
       if hashed_link
         puts "File upload successful, hashed link: #{hashed_link}"
@@ -65,6 +66,7 @@ class Anonymoose < Sinatra::Base
       original_name = metadata[:file_name]
       puts "Unique ID: #{unique_id}, Original name: #{original_name}"  # Debug log
       filepath = File.join(UPLOAD_DIR, unique_id)
+      # Need error handling here I believe
       if File.exist?(filepath)
         send_file filepath, disposition: 'attachment', filename: original_name, type: 'application/octet-stream'
       else

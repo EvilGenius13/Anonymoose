@@ -22,3 +22,10 @@ upload max downloads
 
 BUGS:
 - need to add delete file if error on upload caching
+
+TODO:
+Probably need to create the uploads folder in the root directory on docker image build
+
+### Testing:
+run `RACK_ENV=test rake test`
+

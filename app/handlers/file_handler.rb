@@ -3,9 +3,10 @@ require 'fileutils'
 require 'securerandom'
 
 class FileHandler
-  def initialize(file, cache)
+  def initialize(file, cache, ttl = 0)
     @file = file
     @cache = cache
+    @ttl = ttl
   end
 
   def save
@@ -42,7 +43,7 @@ class FileHandler
 
   def cache_metadata(hash_name, unique_id, file_name)
     metadata = { file_name: file_name, unique_id: unique_id }
-    @cache.set(hash_name, metadata)
+    @cache.set(hash_name, metadata, @ttl * 60)
     puts "Metadata cached: #{hash_name} -> #{metadata}"  # Debug log
   end
 end

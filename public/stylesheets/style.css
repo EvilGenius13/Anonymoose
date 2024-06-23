@@ -103,6 +103,20 @@ input[type="file"] {
   margin-bottom: 1em;
 }
 
+label {
+  margin-bottom: 0.5em;
+  font-weight: bold;
+  color: #333;
+}
+
+select {
+  padding: 0.5em;
+  margin-bottom: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
 button {
   background-color: #891313;
   color: white;

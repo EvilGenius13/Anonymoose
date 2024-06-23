@@ -45,8 +45,8 @@ WORKDIR /app
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 
-# Install dependencies in the production stage
-RUN gem install bundler && bundle install --deployment --without development test
+# Ensure bundler is available in the production stage
+RUN gem install bundler
 
 # Create necessary directories
 RUN mkdir -p /app/uploads

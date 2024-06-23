@@ -28,6 +28,8 @@ BUGS:
 
 TODO:
 Probably need to create the uploads folder in the root directory on docker image build
+need to mask ttl time out of the form and into it's own enum / method
+should probably edit the dockerfile to only use essential files, dump the test files and build a second Gemfile for prod
 
 ### Testing:
 run `RACK_ENV=test rake test`

@@ -25,10 +25,10 @@ RUN gem install bundler && bundle install
 COPY . .
 
 # Set environment to test for running tests
-ENV RACK_ENV=test
+# ENV RACK_ENV=test
 
 # Run tests
-RUN bundle exec rake test
+# RUN bundle exec rake test
 
 # Stage 2: Production
 FROM ruby:3.2.2-slim

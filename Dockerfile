@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     g++ \
     libclang-dev \
+    libssl-dev \
     && rm -rf /var/lib/apt/lists/* \
     && curl https://sh.rustup.rs -sSf | sh -s -- -y
 
@@ -36,6 +37,7 @@ FROM ruby:3.2.2-slim
 # Install necessary packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libmemcached-dev \
+    libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory

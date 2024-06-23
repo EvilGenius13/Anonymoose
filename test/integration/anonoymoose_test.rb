@@ -5,16 +5,20 @@ require_relative '../../app'
 class AnonymooseTest < Minitest::Test
   include Rack::Test::Methods
 
+  UPLOAD_DIR = 'uploads'
+
   def app
     Anonymoose.new
   end
 
   def setup
+    FileUtils.mkdir_p(UPLOAD_DIR)
     # Create a test file
     File.open('test/test.txt', 'w') { |file| file.write("test content") }
   end
 
   def teardown
+    FileUtils.rm_rf(UPLOAD_DIR)
     # Clean up the test file
     File.delete('test/test.txt') if File.exist?('test/test.txt')
   end

@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memcached-deployment
+  labels:
+    app: memcached
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memcached
+  template:
+    metadata:
+      labels:
+        app: memcached
+    spec:
+      containers:
+      - name: memcached
+        image: memcached:latest
+        ports:
+        - containerPort: 11211
+        env:
+        - name: MEMCACHED_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: memcached-secrets
+              key: memcached-username
+        - name: MEMCACHED_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: memcached-secrets
+              key: memcached-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: memcached
+spec:
+  selector:
+    app: memcached
+  ports:
+    - protocol: TCP
+      port: 11211
+      targetPort: 11211
+  type: ClusterIP

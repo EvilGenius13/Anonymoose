@@ -12,6 +12,7 @@ class Anonymoose < Sinatra::Base
   helpers Sinatra::ContentFor
 
   configure :development do
+    require 'sinatra/reloader'
     register Sinatra::Reloader
   end
 
@@ -40,11 +41,11 @@ class Anonymoose < Sinatra::Base
       return erb :upload
     end
     if file
-      puts "Received file upload request: #{file.inspect}"
+      # puts "Received file upload request: #{file.inspect}"
       file_handler = FileHandler.new(file, env['cache'], ttl)
       hashed_link = file_handler.save
       if hashed_link
-        puts "File upload successful, hashed link: #{hashed_link}"
+        # puts "File upload successful, hashed link: #{hashed_link}"
         erb :upload_success, locals: { link: hashed_link }
       else
         puts "File upload failed"
@@ -64,7 +65,7 @@ class Anonymoose < Sinatra::Base
     if metadata
       unique_id = metadata[:unique_id]
       original_name = metadata[:file_name]
-      puts "Unique ID: #{unique_id}, Original name: #{original_name}"  # Debug log
+      # puts "Unique ID: #{unique_id}, Original name: #{original_name}"  # Debug log
       filepath = File.join(UPLOAD_DIR, unique_id)
       # Need error handling here I believe
       if File.exist?(filepath)

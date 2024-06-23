@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anonymoose-deployment
+  labels:
+    app: anonymoose
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anonymoose
+  template:
+    metadata:
+      labels:
+        app: anonymoose
+    spec:
+      containers:
+      - name: anonymoose
+        image: evilgenius13/anonymoose:dev
+        ports:
+        - containerPort: 9292
+        env:
+        - name: MEMCACHED_ADDRESS
+          value: "memcached:11211"
+        - name: MEMCACHED_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: memcached-secrets
+              key: memcached-username
+        - name: MEMCACHED_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: memcached-secrets
+              key: memcached-password
+        volumeMounts:
+        - name: uploads
+          mountPath: /app/uploads
+      volumes:
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: uploads-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anonymoose-service
+spec:
+  selector:
+    app: anonymoose
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9292
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: uploads-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

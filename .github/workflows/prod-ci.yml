@@ -58,3 +58,12 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: evilgenius13/anonymoose:prod
+       
+       - name: Notify Buildkite
+        if: success()
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.BUILDKITE_API_TOKEN }}" \
+            -d '{"build": {"message": "Triggering Buildkite pipeline"}}' \
+            https://api.buildkite.com/v2/organizations/timewellspent/pipelines/deployment/builds

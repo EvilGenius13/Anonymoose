@@ -59,7 +59,7 @@ jobs:
           push: true
           tags: evilgenius13/anonymoose:prod
        
-       - name: Notify Buildkite
+      - name: Notify Buildkite
         if: success()
         run: |
           curl -X POST \

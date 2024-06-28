@@ -14,8 +14,8 @@ NAMESPACE="anonymoose-prod"
 unique_id=$(date +%s)
 
 # Update the deployment file with a unique annotation
-sed -i "s/annotations:.*/annotations:\n      redeploy-hash: \"$unique_id\"/" ./deployment/production/app_deployment.yml
+sed -i "s/annotations:.*/annotations:\n      redeploy-hash: \"$unique_id\"/" deployment/production/app_deployment.yml
 
 # Apply Kubernetes manifests
-kubectl apply -f ./deployment/production/memcached_deployment.yml -n $NAMESPACE
-kubectl apply -f ./deployment/production/app_deployment.yml -n $NAMESPACE
+kubectl apply -f deployment/production/memcached_deployment.yml -n $NAMESPACE
+kubectl apply -f deployment/production/app_deployment.yml -n $NAMESPACE

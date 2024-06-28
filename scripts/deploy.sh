@@ -17,5 +17,5 @@ unique_id=$(date +%s)
 sed -i "s/annotations:.*/annotations:\n      redeploy-hash: \"$unique_id\"/" deployment/production/app_deployment.yml
 
 # Apply Kubernetes manifests
-kubectl apply -f deployment/production/memcached_deployment.yml -n $NAMESPACE
+kubectl apply -f deployment/production/memcache_deployment.yml -n $NAMESPACE
 kubectl apply -f deployment/production/app_deployment.yml -n $NAMESPACE

@@ -17,6 +17,7 @@ spec:
       containers:
       - name: anonymoose
         image: evilgenius13/anonymoose:dev
+        imagePullPolicy: Always
         ports:
         - containerPort: 9292
         env:

@@ -4,6 +4,8 @@ metadata:
   name: anonymoose-deployment
   labels:
     app: anonymoose
+  annotations:
+    redeploy-hash: ""  # This will be updated by the deploy.sh script
 spec:
   replicas: 1
   selector:
@@ -16,7 +18,7 @@ spec:
     spec:
       containers:
       - name: anonymoose
-        image: evilgenius13/anonymoose:dev
+        image: evilgenius13/anonymoose:prod
         imagePullPolicy: Always
         ports:
         - containerPort: 9292
@@ -40,28 +42,3 @@ spec:
       - name: uploads
         persistentVolumeClaim:
           claimName: uploads-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: anonymoose-service
-spec:
-  selector:
-    app: anonymoose
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 9292
-  type: LoadBalancer
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: uploads-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi

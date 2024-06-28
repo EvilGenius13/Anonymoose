@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Debugging
+pwd
+ls -R
+
 # Export KUBECONFIG if not already set
 export KUBECONFIG=${KUBECONFIG:-~/.kube/config}
 

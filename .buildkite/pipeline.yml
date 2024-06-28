@@ -1,6 +1,8 @@
 steps:
   - label: ":rocket: Deploy"
-    command:
+    commands:
+      - git clone https://github.com/EvilGenius13/Anonymoose.git
+      - cd repo
       - ./scripts/deploy.sh
     env:
       KUBECONFIG: ~/.kube/config

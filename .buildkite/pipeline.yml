@@ -1,8 +1,6 @@
 steps:
-  - wait
-
   - label: ":rocket: Deploy"
-  # Kubernetes deployment to be replaced here
-    command: "echo 'Add deployment script here'"
-  
-  # - wait
+    command:
+      - ./scripts/deploy.sh
+    env:
+      KUBECONFIG: ~/.kube/config

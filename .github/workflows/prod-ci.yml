@@ -52,25 +52,9 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build and push Docker image
-        env:
-          TAG: ${{ github.sha }}
         run: |
-          docker build -t evilgenius13/anonymoose:${{ github.sha }} .
-          docker push evilgenius13/anonymoose:${{ github.sha }}
-
-      - name: Configure Git
-        env:
-          GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
-          GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-        run: |
-          git config --global user.email "$GIT_USER_EMAIL"
-          git config --global user.name "$GIT_USER_NAME"
-
-      - name: Update deployment file with new image
-        run: |
-          sed -i "s|evilgenius13/anonymoose:prod|evilgenius13/anonymoose:${{ github.sha }}|g" deployment/production/app_deployment.yml
-          git commit -am "Update image tag to ${{ github.sha }}"
-          git push
+          docker build -t evilgenius13/anonymoose:prod .
+          docker push evilgenius13/anonymoose:prod
 
       - name: Notify Buildkite
         if: success()

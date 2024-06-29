@@ -4,8 +4,6 @@ metadata:
   name: anonymoose-deployment
   labels:
     app: anonymoose
-  annotations:
-    redeploy-hash: ""  # This will be updated by the deploy.sh script
 spec:
   replicas: 1
   selector:
@@ -18,7 +16,7 @@ spec:
     spec:
       containers:
       - name: anonymoose
-        image: evilgenius13/anonymoose:prod
+        image: evilgenius13/anonymoose:latest  # This will be updated dynamically in the CI pipeline
         imagePullPolicy: Always
         ports:
         - containerPort: 9292

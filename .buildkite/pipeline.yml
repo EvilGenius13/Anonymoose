@@ -5,4 +5,4 @@ steps:
       - cd Anonymoose
       - scripts/deploy.sh
     env:
-      KUBECONFIG: ~/.kube/config
+      KUBECONFIG: /home/ubuntu/.kube/config

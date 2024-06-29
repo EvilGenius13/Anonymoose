@@ -5,8 +5,8 @@ NAMESPACE="anonymoose-prod"
 DEPLOYMENT_NAME="anonymoose-deployment"
 IMAGE="evilgenius13/anonymoose:prod"
 
-# Export KUBECONFIG if not already set
-export KUBECONFIG=${KUBECONFIG:-~/.kube/config}
+# Export KUBECONFIG path
+export KUBECONFIG=/home/ubuntu/.kube/config
 
 # Debugging and clarity
 pwd

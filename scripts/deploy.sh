@@ -1,28 +1,33 @@
 #!/bin/bash
 
-# Debugging and clarity
-pwd
-ls -R
+# Set variables
+NAMESPACE="anonymoose-prod"
+DEPLOYMENT_NAME="anonymoose-deployment"
+IMAGE="evilgenius13/anonymoose:prod"
 
 # Export KUBECONFIG if not already set
 export KUBECONFIG=${KUBECONFIG:-~/.kube/config}
+
+# Debugging and clarity
+pwd
+ls -R
 
 # Debugging step to ensure KUBECONFIG is set correctly
 echo "Using KUBECONFIG: $KUBECONFIG"
 kubectl config view
 
-# Set the correct context (optional but ensures the correct context is used)
-kubectl config use-context microk8s
-
 # Verify kubectl can connect to the cluster
 kubectl get nodes
 
-# Namespace
-NAMESPACE="anonymoose-prod"
-
-# Apply Kubernetes manifests
-echo "Applying memcache deployment"
-kubectl apply -f deployment/production/memcache_deployment.yml -n $NAMESPACE --validate=false
-
-echo "Applying app deployment"
-kubectl apply -f deployment/production/app_deployment.yml -n $NAMESPACE --validate=false
+# Check if there are any changes in the deployment YAML files
+git fetch origin main
+if git diff --exit-code origin/main -- deployment/production; then
+  echo "No changes in deployment YAML files, updating image..."
+  # No changes, update the image
+  kubectl set image deployment/${DEPLOYMENT_NAME} ${DEPLOYMENT_NAME}=${IMAGE} -n ${NAMESPACE}
+else
+  echo "Changes detected in deployment YAML files, applying changes..."
+  # Apply Kubernetes manifests
+  kubectl apply -f deployment/production/memcache_deployment.yml -n ${NAMESPACE}
+  kubectl apply -f deployment/production/app_deployment.yml -n ${NAMESPACE}
+fi

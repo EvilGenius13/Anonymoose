@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: anonymoose
-        image: evilgenius13/anonymoose:latest  # This will be updated dynamically in the CI pipeline
+        image: evilgenius13/anonymoose:prod
         imagePullPolicy: Always
         ports:
         - containerPort: 9292

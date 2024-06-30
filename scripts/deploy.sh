@@ -12,11 +12,20 @@ export KUBECONFIG=/home/ubuntu/.kube/config
 pwd
 ls -R
 
+# Print the contents of the KUBECONFIG file
+echo "Contents of KUBECONFIG ($KUBECONFIG):"
+cat $KUBECONFIG
+
 # Debugging step to ensure KUBECONFIG is set correctly
 echo "Using KUBECONFIG: $KUBECONFIG"
 kubectl config view
 
+# Print the current context
+echo "Current context:"
+kubectl config current-context
+
 # Verify kubectl can connect to the cluster
+echo "Getting nodes:"
 kubectl get nodes
 
 # Check if there are any changes in the deployment YAML files

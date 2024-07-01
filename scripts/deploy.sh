@@ -3,6 +3,7 @@
 # Set variables
 NAMESPACE="anonymoose-prod"
 DEPLOYMENT_NAME="anonymoose-deployment"
+CONTAINER_NAME="anonymoose"
 IMAGE="evilgenius13/anonymoose:prod"
 
 # Export KUBECONFIG path
@@ -33,7 +34,7 @@ git fetch origin main
 if git diff --exit-code origin/main -- deployment/production; then
   echo "No changes in deployment YAML files, updating image..."
   # No changes, update the image
-  kubectl set image deployment/${DEPLOYMENT_NAME} ${DEPLOYMENT_NAME}=${IMAGE} -n ${NAMESPACE}
+  kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE} -n ${NAMESPACE}
 else
   echo "Changes detected in deployment YAML files, applying changes..."
   # Apply Kubernetes manifests

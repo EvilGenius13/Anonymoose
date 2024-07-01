@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Set variables
+REPO_URL="https://github.com/EvilGenius13/Anonymoose.git"
+REPO_DIR="Anonymoose"
 NAMESPACE="anonymoose-prod"
 DEPLOYMENT_NAME="anonymoose-deployment"
 CONTAINER_NAME="anonymoose"
@@ -8,6 +10,17 @@ IMAGE="evilgenius13/anonymoose:prod"
 
 # Export KUBECONFIG path
 export KUBECONFIG=/home/ubuntu/.kube/config
+
+# Check if the repository already exists
+if [ -d "$REPO_DIR" ]; then
+  echo "Repository already exists. Pulling the latest changes..."
+  cd $REPO_DIR
+  git pull origin main
+else
+  echo "Cloning the repository..."
+  git clone $REPO_URL
+  cd $REPO_DIR
+fi
 
 # Debugging and clarity
 pwd

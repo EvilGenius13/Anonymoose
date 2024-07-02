@@ -40,6 +40,6 @@ class AnonymooseTest < Minitest::Test
     post '/upload', { file: file, expiration: '15' }
 
     assert last_response.ok?
-    assert_includes last_response.body, 'Upload Successful'
+    assert_includes last_response.body, 'Upload Success'
   end
 end

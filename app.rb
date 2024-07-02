@@ -46,7 +46,7 @@ class Anonymoose < Sinatra::Base
       hashed_link = file_handler.save
       if hashed_link
         # puts "File upload successful, hashed link: #{hashed_link}"
-        erb :upload_success, locals: { link: hashed_link }
+        erb :upload_success, locals: { link: hashed_link, ttl: ttl / 60 }
       else
         puts "File upload failed"
         @error_message = "File upload failed. Please upload a valid file."
@@ -78,5 +78,9 @@ class Anonymoose < Sinatra::Base
       status 404
       erb :error
     end
+  end
+
+  not_found do
+    erb :error
   end
 end

@@ -1,19 +1,28 @@
 <% content_for :title do %>Upload a File<% end %>
 
-<h1>Upload a File</h1>
-<% if @error_message %>
-  <p class="error"><%= @error_message %></p>
-<% end %>
-<form action="/upload" method="post" enctype="multipart/form-data">
-  <input type="file" name="file">
-  <label for="upload-expiration">Choose expiration:</label>
-  <select name="expiration" id="expiration">
-    <option value="900">15 Minutes</option>
-    <option value="3600">1 Hour</option>
-    <option value="14400">4 Hours</option>
-    <option value="28800">8 Hours</option>
-    <option value="86400">1 Day</option>
-    <%# Need to mask this with an enum %>
-  </select>
-  <button type="submit">Upload</button>
-</form>
+<article class="border">
+  <h5>Upload</h5>
+  <p>Upload a file. Uploads will expire after a duration and be deleted from the servers</p>
+  <% if @error_message %>
+    <p class="error"><%= @error_message %></p>
+  <% end %>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <div class="field">
+      <button class="circle">
+        <i>attach_file</i>
+        <input type="file" id="upload-file" name="file">
+      </button>
+    </div>
+    <div class="field">
+      <label for="expiration">Choose expiration:</label>
+      <select name="expiration" id="expiration" class="round">
+        <option value="900">15 Minutes</option>
+        <option value="3600">1 Hour</option>
+        <option value="14400">4 Hours</option>
+        <option value="28800">8 Hours</option>
+        <option value="86400">1 Day</option>
+      </select>
+    </div>
+    <button type="submit" class="round">Upload</button>
+  </form>
+</article>

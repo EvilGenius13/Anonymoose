@@ -9,10 +9,10 @@
   <script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-colors@1.1.2/dist/cdn/material-dynamic-colors.min.js"></script>
   <link rel="icon" href="/images/favicon.ico" />
 </head>
-<body>
+<body class="dark">
   <%= erb :_navbar %>
-  <div class="content">
+  <main class="responsive">
     <%= yield %>
-  </div>
+  </main>
 </body>
 </html>

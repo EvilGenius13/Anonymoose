@@ -1,6 +1,13 @@
 <% content_for :title do %>Upload Success<% end %>
 
-<h1>Upload Successful!</h1>
-<p>Your file has been uploaded successfully.</p>
-<p>Here is your unique link: <a href="/uploads/<%= link %>"><%= link %></a></p>
-<a href="/" class="button">Go back to home</a>
+<article class="border">
+  <h5>Upload Success</h5>
+  <a href="/uploads/<%= link %>" class="row padding surface-container">
+  <i>check_circle</i>
+  <div class="max">
+    <h6 class="small">Right click to copy to copy your link</h6>
+  </div>
+  <label>Link Expires in : <%= ttl %> minutes</label>
+  </a>
+  <a href="/" class="border round button">Home</a>
+</article>

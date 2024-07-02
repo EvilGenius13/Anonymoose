@@ -1,28 +1,12 @@
 # Anonymoose
+
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/evilgenius13/anonymoose/prod?logo=docker)
+![Dev Build](https://github.com/EvilGenius13/anonymoose/actions/workflows/ci.yml/badge.svg)
+![Release Build](https://github.com/EvilGenius13/anonymoose/actions/workflows/prod-ci.yml/badge.svg)
+[![Kubernetes Deployment](https://badge.buildkite.com/0f5451722a0c03c7348769233f1f2c23df60736e67222a6ea5.svg)](https://buildkite.com/timewellspent/deployment)
+
+### Description:
 A quick file sharing service. Upload a file and get a link to share with others. The file will be deleted after a certain amount of time or after a certain number of downloads.
-
-## Roadmap:
-- Frontend:
-  - New options for max downloads and create option menu for it
-  - Nice link generation when creating upload
-- Backend:
-  - Add logging middleware
-  - Add error handling middleware
-  - Add request id middleware
-  - Add security headers
-  - Add pricing
-  - Add memberships
-  - Add upload max downloads
-  - CI/CD:
-  - Kubernetes deployment through buildkite
-  - Generate new valid cert for remote api access (TLS)
-
-BUGS:
-- need to add delete file if error on upload caching
-
-TODO:
-need to mask ttl time out of the form and into it's own enum / method
-should probably edit the dockerfile to only use essential files, dump the test files and build a second Gemfile for prod
 
 ### Testing:
 run `RACK_ENV=test rake test`

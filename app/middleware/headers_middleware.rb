@@ -14,6 +14,7 @@ class HeadersMiddleware
     headers['Content-Security-Policy'] = "default-src 'self'"
     headers['X-XSS-Protection'] = '1; mode=block'
     headers['X-Originating-IP'] = originating_ip
+    headers['Content-Security-Policy'] = csp_header
     
     [status, headers, response]
   end
@@ -28,5 +29,10 @@ class HeadersMiddleware
       # Otherwise, use the remote address
       env['REMOTE_ADDR']
     end
+  end
+
+  def csp_header
+    nonce = SecureRandom.base64
+    "default-src 'self'; style-src 'self' https://cdn.jsdelivr.net; script-src 'self' https://cdn.jsdelivr.net 'nonce-#{nonce}'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
   end
 end

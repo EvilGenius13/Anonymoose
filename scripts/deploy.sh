@@ -11,11 +11,6 @@ IMAGE="evilgenius13/anonymoose:prod"
 # Export KUBECONFIG path
 export KUBECONFIG=/home/ubuntu/.kube/config
 
-# Debugging: Check current user and permissions
-echo "Current user: $(whoami)"
-echo "KUBECONFIG permissions:"
-ls -l /home/ubuntu/.kube/config
-
 # Check if the repository already exists
 if [ -d "$REPO_DIR" ]; then
   echo "Repository already exists. Pulling the latest changes..."
@@ -50,12 +45,18 @@ kubectl get nodes
 # Check if there are any changes in the deployment YAML files
 git fetch origin main
 if git diff --exit-code origin/main -- deployment/production; then
-  echo "No changes in deployment YAML files, updating image..."
-  # No changes, update the image
-  kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE} -n ${NAMESPACE}
+  echo "No changes in deployment YAML files."
 else
   echo "Changes detected in deployment YAML files, applying changes..."
   # Apply Kubernetes manifests
   kubectl apply -f deployment/production/memcache_deployment.yml -n ${NAMESPACE}
   kubectl apply -f deployment/production/app_deployment.yml -n ${NAMESPACE}
 fi
+
+# Always set the image to the latest version
+echo "Updating deployment image..."
+kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE} -n ${NAMESPACE}
+
+# Optional: restart the deployment to ensure it picks up the new image
+kubectl rollout restart deployment/${DEPLOYMENT_NAME} -n ${NAMESPACE}
+

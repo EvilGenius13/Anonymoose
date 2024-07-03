@@ -62,5 +62,9 @@ jobs:
           curl -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ secrets.BUILDKITE_API_TOKEN }}" \
-            -d '{"build": {"message": "Triggering Buildkite pipeline"}}' \
+            -d '{
+              "commit": "${{ github.sha }}",
+              "branch": "${{ github.ref }}",
+              "build": {"message": "Triggering Buildkite pipeline"}
+            }' \
             https://api.buildkite.com/v2/organizations/timewellspent/pipelines/deployment/builds

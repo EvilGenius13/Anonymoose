@@ -11,6 +11,11 @@ IMAGE="evilgenius13/anonymoose:prod"
 # Export KUBECONFIG path
 export KUBECONFIG=/home/ubuntu/.kube/config
 
+# Debugging: Check current user and permissions
+echo "Current user: $(whoami)"
+echo "KUBECONFIG permissions:"
+ls -l /home/ubuntu/.kube/config
+
 # Check if the repository already exists
 if [ -d "$REPO_DIR" ]; then
   echo "Repository already exists. Pulling the latest changes..."

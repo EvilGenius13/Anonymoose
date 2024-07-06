@@ -7,3 +7,8 @@ Rake::TestTask.new do |t|
 end
 
 task default: :test
+
+desc "Run the app in development mode"
+task :dev do
+  sh "RACK_ENV=development bundle exec falcon serve --bind http://localhost:9292"
+end

@@ -18,15 +18,12 @@ class FileHandler
     hash_name = generate_hashed_link(unique_id)
 
     filepath = File.join(UPLOAD_DIR, unique_id)
-    # puts "Attempting to save file to: #{filepath}"
 
     begin
       File.open(filepath, 'wb') do |f|
         f.write(tempfile.read)
       end
-      # puts "File saved successfully"
       cache_metadata(hash_name, unique_id, filename)
-      # puts "Generated Hashed link: #{hash_name}"
       hash_name
     rescue => e
       puts "Failed to save file: #{e.message}"
@@ -45,6 +42,5 @@ class FileHandler
     metadata = { file_name: file_name, unique_id: unique_id }
     # need to create an enum that answers what the tll will be instead of using a fixed value in upload.erb
     @cache.set(hash_name, metadata, @ttl)
-    # puts "Metadata cached: #{hash_name} -> #{metadata} with TTL #{@ttl}"  # Debug log
   end
 end

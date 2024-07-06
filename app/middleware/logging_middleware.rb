@@ -33,9 +33,9 @@ class LoggingMiddleware
   end
 
   def send_to_axiom(log_entry)
-    uri = URI("https://api.axiom.co/v1/datasets/#{ENV['AXIOM_DATASET']}/ingest")
+    uri = URI("https://api.axiom.co/v1/datasets/#{AXIOM_DATASET}/ingest")
     headers = {
-      'Authorization' => "Bearer #{ENV['AXIOM_API_TOKEN']}",
+      'Authorization' => "Bearer #{AXIOM_API_TOKEN}",
       'Content-Type' => 'application/json'
     }
     body = [log_entry].to_json

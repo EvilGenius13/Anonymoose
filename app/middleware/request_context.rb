@@ -4,6 +4,7 @@ class RequestContext
   def initialize
     @log_data = {
       timestamp: Time.now.iso8601,
+      environment: ENVIRONMENT,
       method: nil,
       path: nil,
       status: nil,

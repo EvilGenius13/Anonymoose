@@ -12,8 +12,7 @@ A quick file sharing service. Upload a file and get a link to share with others.
 run `RACK_ENV=test rake test`
 
 ### Running locally:
-run `bundle exec falcon serve --bind http://localhost:9292` to start the server OR
-run `RACK_ENV=development bundle exec falcon serve --bind http://localhost:9292` to start the server with hot reload
+run `rake dev` to start the server with hot reload
 
 ### Production:
 Anonymoose runs in a microk8s kubernetes cluster

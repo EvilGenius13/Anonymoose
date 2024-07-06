@@ -42,16 +42,10 @@ kubectl config current-context
 echo "Getting nodes:"
 kubectl get nodes
 
-# Check if there are any changes in the deployment YAML files
-git fetch origin main
-if git diff --exit-code origin/main -- deployment/production; then
-  echo "No changes in deployment YAML files."
-else
-  echo "Changes detected in deployment YAML files, applying changes..."
-  # Apply Kubernetes manifests
-  kubectl apply -f deployment/production/memcache_deployment.yml -n ${NAMESPACE}
-  kubectl apply -f deployment/production/app_deployment.yml -n ${NAMESPACE}
-fi
+# Apply Kubernetes manifests regardless of changes
+echo "Applying Kubernetes manifests..."
+kubectl apply -f deployment/production/memcache_deployment.yml -n ${NAMESPACE}
+kubectl apply -f deployment/production/app_deployment.yml -n ${NAMESPACE}
 
 # Always set the image to the latest version
 echo "Updating deployment image..."
@@ -59,4 +53,3 @@ kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE} -n ${
 
 # Optional: restart the deployment to ensure it picks up the new image
 kubectl rollout restart deployment/${DEPLOYMENT_NAME} -n ${NAMESPACE}
-

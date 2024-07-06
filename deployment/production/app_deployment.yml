@@ -33,6 +33,16 @@ spec:
             secretKeyRef:
               name: memcached-secrets
               key: memcached-password
+        - name: AXIOM_DATASET
+          valueFrom:
+            secretKeyRef:
+              name: memcached-secrets
+              key: axiom-dataset
+        - name: AXIOM_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: memcached-secrets
+              key: axiom-api-token
         volumeMounts:
         - name: uploads
           mountPath: /app/uploads

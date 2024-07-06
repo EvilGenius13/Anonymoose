@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-gem 'falcon'
+gem 'puma'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'blake3-rb'
@@ -14,3 +14,4 @@ gem 'rack-test'
 gem 'opentelemetry-sdk'
 gem 'opentelemetry-exporter-otlp'
 gem 'opentelemetry-instrumentation-all'
+gem 'async'

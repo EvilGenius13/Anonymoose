@@ -1,7 +1,6 @@
 require 'sinatra/base'
 require 'sinatra/content_for'
-require 'falcon'
-require_relative 'app/config/environment'
+require_relative 'config/environment'
 require_relative 'app/handlers/file_handler'
 require_relative 'app/middleware/caching_middleware'
 require_relative 'app/middleware/headers_middleware'

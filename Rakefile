@@ -10,5 +10,5 @@ task default: :test
 
 desc "Run the app in development mode"
 task :dev do
-  sh "RACK_ENV=development bundle exec falcon serve --bind http://localhost:9292"
+  sh "bundle exec puma -C config/puma.rb"
 end

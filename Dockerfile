@@ -1,3 +1,4 @@
+# Dockerfile
 # Stage 1: Build
 FROM ruby:3.2.2 AS builder
 
@@ -51,6 +52,9 @@ RUN gem install bundler
 # Create necessary directories
 RUN mkdir -p /app/uploads
 
+# Copy the config directory to ensure puma.rb is included
+COPY config /app/config
+
 # Expose the port the app runs on
 EXPOSE 9292
 
@@ -58,4 +62,4 @@ EXPOSE 9292
 ENV RACK_ENV production
 
 # Command to run the application
-CMD ["bundle", "exec", "falcon", "serve", "--bind", "http://0.0.0.0:9292"]
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

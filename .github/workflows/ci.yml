@@ -21,8 +21,12 @@ jobs:
           - 9000:9000
           - 9001:9001
         options: >-
+          --health-cmd "curl --silent --fail http://localhost:9000/minio/health/live || exit 1"
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 3
           --entrypoint sh
-          -c "mkdir -p /data && /usr/bin/minio server /data --console-address ':9001'"
+          -c "mkdir -p /data && /usr/bin/minio server /data"
 
     steps:
       - name: Checkout code

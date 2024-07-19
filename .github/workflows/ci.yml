@@ -31,6 +31,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 3
+        entrypoint: >
+          sh -c "mkdir -p /data && minio server /data --console-address :9001"
 
     steps:
       - name: Checkout code

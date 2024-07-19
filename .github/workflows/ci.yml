@@ -21,12 +21,7 @@ jobs:
         env:
           MINIO_ACCESS_KEY: development
           MINIO_SECRET_KEY: development
-        options: >
-          --name minio
-          --health-cmd "curl -f http://localhost:9000/minio/health/live || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
+        options: --name minio --health-cmd "curl -f http://localhost:9000/minio/health/live" --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:
       - name: Checkout code

@@ -11,26 +11,18 @@ jobs:
 
     services:
       memcached:
-        image: bitnami/memcached:latest
+        image: memcached:latest
         ports:
           - 11211:11211
-        env:
-          MEMCACHED_USERNAME: dev
-          MEMCACHED_PASSWORD: dev
+
       minio:
         image: quay.io/minio/minio:latest
         ports:
           - 9000:9000
           - 9001:9001
-        env:
-          MINIO_ROOT_USER: development
-          MINIO_ROOT_PASSWORD: development
-        options: >
-          --name minio
-          --health-cmd "curl -f http://localhost:9000/minio/health/live || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
+        options: >-
+          --entrypoint sh
+          -c "mkdir -p /data && /usr/bin/minio server /data --console-address ':9001'"
 
     steps:
       - name: Checkout code
@@ -46,31 +38,14 @@ jobs:
           gem install bundler
           bundle install
 
-      - name: Start MinIO
-        run: |
-          docker exec minio mkdir -p /data
-          docker exec minio minio server /data --console-address ":9001" &
-        env:
-          MINIO_ROOT_USER: development
-          MINIO_ROOT_PASSWORD: development
-
-      - name: Wait for MinIO to be healthy
-        run: |
-          until [ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:9000/minio/health/live)" == "200" ]; do
-            echo "Waiting for MinIO to be healthy..."
-            sleep 5
-          done
-
       - name: Run tests
         env:
           MEMCACHED_ADDRESS: localhost:11211
-          MEMCACHED_USERNAME: dev
-          MEMCACHED_PASSWORD: dev
-          S3_ENDPOINT: http://localhost:9000
-          S3_REGION: us-east-1
-          S3_ACCESS_KEY_ID: development
-          S3_SECRET_ACCESS_KEY: development
-          S3_BUCKET: test-bucket
+          MEMCACHED_USERNAME: ''
+          MEMCACHED_PASSWORD: ''
+          MINIO_ENDPOINT: http://localhost:9000
+          MINIO_ACCESS_KEY: development
+          MINIO_SECRET_KEY: development
         run: |
           bundle exec rake test
 

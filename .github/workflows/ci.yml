@@ -15,7 +15,7 @@ jobs:
         ports:
           - 11211:11211
       minio:
-        image: minio/minio:latest
+        image: quay.io/minio/minio:latest
         ports:
           - 9000:9000
         env:

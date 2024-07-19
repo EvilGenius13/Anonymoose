@@ -31,8 +31,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 3
-        entrypoint: >
-          sh -c "mkdir -p /data && minio server /data --console-address :9001"
 
     steps:
       - name: Checkout code
@@ -51,7 +49,7 @@ jobs:
       - name: Start MinIO
         run: |
           docker exec minio mkdir -p /data
-          docker exec -d minio minio server /data --console-address :9001
+          docker exec minio minio server /data --console-address ":9001" &
         env:
           MINIO_ROOT_USER: development
           MINIO_ROOT_PASSWORD: development

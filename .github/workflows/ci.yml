@@ -31,9 +31,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 3
-          --volume /data:/data
-          --volume /root/.minio:/root/.minio
-        command: server /data --console-address ":9001"
 
     steps:
       - name: Checkout code
@@ -48,6 +45,21 @@ jobs:
         run: |
           gem install bundler
           bundle install
+
+      - name: Start MinIO
+        run: |
+          docker exec minio mkdir -p /data
+          docker exec -d minio minio server /data --console-address :9001
+        env:
+          MINIO_ROOT_USER: development
+          MINIO_ROOT_PASSWORD: development
+
+      - name: Wait for MinIO to be healthy
+        run: |
+          until [ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:9000/minio/health/live)" == "200" ]; do
+            echo "Waiting for MinIO to be healthy..."
+            sleep 5
+          done
 
       - name: Run tests
         env:

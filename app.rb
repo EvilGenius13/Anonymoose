@@ -74,14 +74,24 @@ class Anonymoose < Sinatra::Base
     if metadata
       unique_id = metadata[:unique_id]
       original_name = metadata[:file_name]
-      filepath = File.join(UPLOAD_DIR, unique_id)
 
       context.add_log_data(:file_hash, hash)
 
-      if File.exist?(filepath)
-        send_file filepath, disposition: 'attachment', filename: original_name, type: 'application/octet-stream'
-      else
-        status 404
+      begin
+        file_data = download_from_s3(unique_id)
+        if file_data
+          content_type 'application/octet-stream'
+          attachment original_name
+          response.write file_data
+        else
+          status 500
+          @error_message = "File could not be downloaded."
+          erb :error
+        end
+      rescue => e
+        puts "Error sending file: #{e.message}"
+        status 500
+        @error_message = "File could not be downloaded."
         erb :error
       end
     else
@@ -92,5 +102,23 @@ class Anonymoose < Sinatra::Base
 
   not_found do
     erb :error
+  end
+
+  private
+
+  def download_from_s3(unique_id)
+    s3_handler = S3Handler.new
+    begin
+      resp = s3_handler.download_file(unique_id)
+      file_data = resp.body.read
+
+      # Debugging: Check the first few bytes of the file data
+      puts "File content preview: #{file_data[0, 100].inspect}"
+
+      file_data
+    rescue => e
+      puts "Error downloading file from S3: #{e.message}"
+      nil
+    end
   end
 end

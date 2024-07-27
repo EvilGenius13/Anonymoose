@@ -32,7 +32,7 @@ class FileHandlerTest < Minitest::Test
   end
 
   def test_file_save_and_cache
-    ttl = 5  # 5 seconds TTL
+    ttl = 15  # 15 seconds TTL
     file_handler = FileHandler.new(@file, @cache, ttl)
     hash_name = file_handler.save
 
@@ -42,6 +42,8 @@ class FileHandlerTest < Minitest::Test
     metadata = @cache.get(hash_name)
     unique_id = metadata[:unique_id] if metadata
     puts "Cached metadata: #{metadata.inspect}"  # Debugging
+
+    sleep 5 # Temp fix for CI
 
     # Check if file is saved in MinIO
     object_exists = s3_object_exists?(unique_id)

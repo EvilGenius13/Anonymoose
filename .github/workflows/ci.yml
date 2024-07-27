@@ -15,18 +15,6 @@ jobs:
         ports:
           - 11211:11211
 
-      minio:
-        image: quay.io/minio/minio:latest
-        ports:
-          - 9000:9000
-          - 9001:9001
-        options: >-
-          --health-cmd "curl --silent --fail http://localhost:9000/minio/health/live || exit 1"
-          --health-interval 30s
-          --health-timeout 10s
-          --health-retries 3
-          --entrypoint sh
-          -c "mkdir -p /data && /usr/bin/minio server /data"
 
     steps:
       - name: Checkout code
@@ -41,17 +29,15 @@ jobs:
         run: |
           gem install bundler
           bundle install
-
-      - name: Minio Deploy
-        uses: lovellfelix/minio-deploy-action@v1
+     
+      - name: Start MinIO
+        uses: infleet/minio-action@v0.0.1
         with:
-          endpoint: http://localhost:9000
-          access_key: development
-          secret_key: development
-          bucket: test-bucket
-          source_dir: 'public'
-          target_dir: '/'
-      
+          port: "9000"
+          version: "latest"
+          username: "development"
+          password: "development"
+
       - name: Run tests
         env:
           MEMCACHED_ADDRESS: localhost:11211

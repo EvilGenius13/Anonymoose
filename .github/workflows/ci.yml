@@ -42,6 +42,16 @@ jobs:
           gem install bundler
           bundle install
 
+      - name: Minio Deploy
+        uses: lovellfelix/minio-deploy-action@v1
+        with:
+          endpoint: http://localhost:9000
+          access_key: development
+          secret_key: development
+          bucket: test-bucket
+          source_dir: 'public'
+          target_dir: '/'
+      
       - name: Run tests
         env:
           MEMCACHED_ADDRESS: localhost:11211
@@ -52,6 +62,8 @@ jobs:
           MINIO_SECRET_KEY: development
         run: |
           bundle exec rake test
+
+      
 
   build:
     runs-on: ubuntu-latest

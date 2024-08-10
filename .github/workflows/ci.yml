@@ -31,15 +31,11 @@ jobs:
           bundle install
      
       - name: Minio Deploy
-        uses: hkdobrev/minio-deploy-action@v1
+        uses: infleet/minio-action@v0.0.1
         with:
-          endpoint: 'http://localhost:9000'
-          access_key: 'development'
-          secret_key: 'development'
-          bucket: 'test-bucket'
-          source_dir: 'public'
-          target_dir: '/'
-          insecure: true
+          username: 'development'
+          password: 'development'
+          port: 9000
       
       - name: Wait for Minio to start
         run: |

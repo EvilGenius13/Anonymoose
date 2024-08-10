@@ -39,6 +39,7 @@ jobs:
           bucket: 'test-bucket'
           source_dir: 'public'
           target_dir: '/'
+          insecure: true
       
       - name: Wait for Minio to start
         run: |

@@ -30,14 +30,6 @@ jobs:
           gem install bundler
           bundle install
      
-      # - name: Start MinIO
-      #   uses: infleet/minio-action@v0.0.1
-      #   with:
-      #     port: "9000"
-      #     version: "latest"
-      #     username: "development"
-      #     password: "development"
-
       - name: Minio Deploy
         uses: hkdobrev/minio-deploy-action@v1
         with:
@@ -46,6 +38,13 @@ jobs:
           secret_key: 'development'
           bucket: 'test-bucket'
           source_dir: 'public'
+          target_dir: '/'
+      
+      - name: Wait for Minio to start
+        run: |
+          while ! curl -s http://localhost:9000 > /dev/null; do
+            sleep 1
+          done
 
       - name: Run tests
         env:

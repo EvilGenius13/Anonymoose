@@ -42,8 +42,9 @@ jobs:
       
       - name: Wait for Minio to start
         run: |
-          while ! curl -s http://localhost:9000 > /dev/null; do
-            sleep 1
+          while ! curl -s http://localhost:9000/healthcheck > /dev/null; do
+            echo "Waiting for Minio to start..."
+            sleep 5
           done
 
       - name: Run tests

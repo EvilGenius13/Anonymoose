@@ -45,6 +45,7 @@ kubectl get nodes
 # Apply Kubernetes manifests regardless of changes
 echo "Applying Kubernetes manifests..."
 kubectl apply -f deployment/production/memcache_deployment.yml -n ${NAMESPACE}
+kubectl apply -f deployment/production/miniio_deployment.yml -n ${NAMESPACE}
 kubectl apply -f deployment/production/app_deployment.yml -n ${NAMESPACE}
 
 # Always set the image to the latest version

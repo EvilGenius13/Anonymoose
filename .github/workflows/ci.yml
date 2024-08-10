@@ -15,6 +15,7 @@ jobs:
         ports:
           - 11211:11211
 
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -28,14 +29,33 @@ jobs:
         run: |
           gem install bundler
           bundle install
+     
+      - name: Minio Deploy
+        uses: infleet/minio-action@v0.0.1
+        with:
+          username: 'development'
+          password: 'development'
+          port: 9000
+      
+      - name: Wait for Minio to start
+        run: |
+          while ! curl -s http://localhost:9000/healthcheck > /dev/null; do
+            echo "Waiting for Minio to start..."
+            sleep 5
+          done
 
       - name: Run tests
         env:
           MEMCACHED_ADDRESS: localhost:11211
           MEMCACHED_USERNAME: ''
           MEMCACHED_PASSWORD: ''
+          MINIO_ENDPOINT: http://localhost:9000
+          MINIO_ACCESS_KEY: development
+          MINIO_SECRET_KEY: development
         run: |
           bundle exec rake test
+
+      
 
   build:
     runs-on: ubuntu-latest

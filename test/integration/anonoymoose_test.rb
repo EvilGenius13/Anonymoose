@@ -1,26 +1,32 @@
 require 'minitest/autorun'
 require 'rack/test'
+require 'aws-sdk-s3'
 require_relative '../../app'
 
 class AnonymooseTest < Minitest::Test
   include Rack::Test::Methods
-
-  UPLOAD_DIR = 'uploads'
 
   def app
     Anonymoose.new
   end
 
   def setup
-    FileUtils.mkdir_p(UPLOAD_DIR)
+    @s3_client = Aws::S3::Client.new(
+      endpoint: ENV['S3_ENDPOINT'] || 'http://localhost:9000',
+      region: ENV['S3_REGION'] || 'us-east-1',
+      access_key_id: ENV['S3_ACCESS_KEY_ID'] || 'development',
+      secret_access_key: ENV['S3_SECRET_ACCESS_KEY'] || 'development',
+      force_path_style: true
+    )
+    @bucket = ENV['S3_BUCKET'] || 'test-bucket'
+    create_bucket_unless_exists
     # Create a test file
     File.open('test/test.txt', 'w') { |file| file.write("test content") }
   end
 
   def teardown
-    FileUtils.rm_rf(UPLOAD_DIR)
-    # Clean up the test file
     File.delete('test/test.txt') if File.exist?('test/test.txt')
+    clear_bucket
   end
 
   def test_home_page
@@ -41,5 +47,27 @@ class AnonymooseTest < Minitest::Test
 
     assert last_response.ok?
     assert_includes last_response.body, 'Upload Success'
+  end
+
+  private
+
+  def create_bucket_unless_exists
+    @s3_client.create_bucket(bucket: @bucket) unless bucket_exists?
+  rescue Aws::S3::Errors::BucketAlreadyOwnedByYou, Aws::S3::Errors::BucketAlreadyExists
+    # Bucket already exists, no action needed
+  end
+
+  def bucket_exists?
+    @s3_client.head_bucket(bucket: @bucket)
+    true
+  rescue Aws::S3::Errors::NotFound
+    false
+  end
+
+  def clear_bucket
+    objects = @s3_client.list_objects_v2(bucket: @bucket).contents
+    objects.each do |obj|
+      @s3_client.delete_object(bucket: @bucket, key: obj.key)
+    end
   end
 end

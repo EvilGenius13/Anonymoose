@@ -49,9 +49,6 @@ COPY --from=builder /usr/local/bundle /usr/local/bundle
 # Ensure bundler is available in the production stage
 RUN gem install bundler
 
-# Create necessary directories
-RUN mkdir -p /app/uploads
-
 # Copy the config directory to ensure puma.rb is included
 COPY config /app/config
 

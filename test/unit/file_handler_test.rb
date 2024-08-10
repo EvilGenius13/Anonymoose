@@ -19,7 +19,7 @@ class FileHandlerTest < Minitest::Test
       secret_access_key: ENV['S3_SECRET_ACCESS_KEY'] || 'development',
       force_path_style: true
     )
-    @bucket = ENV['S3_BUCKET'] || 'test-bucket'
+    @bucket = ENV['S3_BUCKET'] || 'development-bucket'
     create_bucket_unless_exists
   end
 
@@ -35,6 +35,7 @@ class FileHandlerTest < Minitest::Test
     ttl = 15  # 15 seconds TTL
     file_handler = FileHandler.new(@file, @cache, ttl)
     hash_name = file_handler.save
+    puts "Upload response: #{hash_name.inspect}"
 
     assert hash_name, "Hash name should be generated"
     puts "Generated hash name: #{hash_name}"  # Debugging

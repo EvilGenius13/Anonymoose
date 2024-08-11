@@ -44,7 +44,7 @@ kubectl get nodes
 
 # Apply Kubernetes manifests regardless of changes
 echo "Applying Kubernetes manifests..."
-kubectl apply -f deployment/production/minio-config-pvc.yml -n ${NAMESPACE}
+kubectl apply -f deployment/production/minio-pv-pvc.yml -n ${NAMESPACE}
 kubectl apply -f deployment/production/memcache_deployment.yml -n ${NAMESPACE}
 kubectl apply -f deployment/production/minio_deployment.yml -n ${NAMESPACE}
 kubectl apply -f deployment/production/app_deployment.yml -n ${NAMESPACE}

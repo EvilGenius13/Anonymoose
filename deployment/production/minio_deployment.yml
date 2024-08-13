@@ -36,7 +36,7 @@ spec:
           mountPath: /data
         - name: minio-config
           mountPath: /root/.minio
-        command: ["server", "/data", "--console-address", ":9001"]
+        command: ["minio", "server", "/data", "--console-address", ":9001"]
       volumes:
       - name: minio-data
         persistentVolumeClaim:

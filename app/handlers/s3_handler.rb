@@ -7,19 +7,26 @@ class S3Handler
       region: ENV['S3_REGION'] || 'us-east-1',
       access_key_id: ENV['S3_ACCESS_KEY_ID'] || 'development',
       secret_access_key: ENV['S3_SECRET_ACCESS_KEY'] || 'development',
-      force_path_style: true
+      force_path_style: true,
     )
     @bucket = ENV['S3_BUCKET'] || 'development-bucket'
     create_bucket_unless_exists
   end
 
-  def upload_file(tempfile, unique_id)
+  def upload_file(tempfile, unique_id, ttl)
+    expiration_date = Time.now.utc + ttl
     puts "Uploading file to MinIO with key: #{unique_id}"  # Debugging
     @client.put_object(
       bucket: @bucket,
       key: unique_id,
-      body: tempfile
+      body: tempfile,
+      metadata: {
+        'x-amz-meta-expiration' => expiration_date.iso8601
+      },
+      object_lock_mode: 'GOVERNANCE',
+      object_lock_retain_until_date: expiration_date.iso8601
     )
+
     puts "File uploaded successfully."  # Debugging
   rescue => e
     puts "Error uploading file to S3: #{e.message}"
@@ -37,8 +44,11 @@ class S3Handler
 
   def create_bucket_unless_exists
     unless bucket_exists?
-      @client.create_bucket(bucket: @bucket)
-      puts "Bucket #{@bucket} created."
+      @client.create_bucket(
+        bucket: @bucket,
+        object_lock_enabled_for_bucket: true
+      )
+      puts "Bucket #{@bucket} with object lock created."
     end
   rescue Aws::S3::Errors::BucketAlreadyExists, Aws::S3::Errors::BucketAlreadyOwnedByYou
     puts "Bucket #{@bucket} already exists."

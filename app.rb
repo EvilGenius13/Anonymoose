@@ -53,7 +53,7 @@ class Anonymoose < Sinatra::Base
       context.add_log_data(:file_extension, File.extname(file[:filename]))
 
       if hashed_link
-        erb :upload_success, locals: { link: hashed_link, ttl: ttl / 60 }
+        erb :upload_success, locals: { link: hashed_link }
       else
         puts "File upload failed"
         @error_message = "File upload failed. Please upload a valid file."

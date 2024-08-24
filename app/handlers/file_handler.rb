@@ -4,6 +4,9 @@ require_relative 's3_handler'
 
 class FileHandler
   TTL = {
+    t0: 0, # No expiration
+    t1: 2, # 2 seconds
+    t2: 15, # 15 seconds
     1 => 900, # 15 minutes
     2 => 3600, # 1 hour
     3 => 14400, # 4 hours

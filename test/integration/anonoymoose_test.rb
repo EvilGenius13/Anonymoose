@@ -43,7 +43,7 @@ class AnonymooseTest < Minitest::Test
 
   def test_file_upload
     file = Rack::Test::UploadedFile.new('test/test.txt', 'text/plain')
-    post '/upload', { file: file, expiration: '15' }
+    post '/upload', { file: file, expiration: 1 }
 
     assert last_response.ok?
     assert_includes last_response.body, 'Upload Success'

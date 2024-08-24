@@ -32,23 +32,19 @@ class FileHandlerTest < Minitest::Test
   end
 
   def test_file_save_and_cache
-    ttl = 15  # 15 seconds TTL
+    ttl = :t2  # 15 seconds TTL
     file_handler = FileHandler.new(@file, @cache, ttl)
     hash_name = file_handler.save
-    puts "Upload response: #{hash_name.inspect}"
 
     assert hash_name, "Hash name should be generated"
-    puts "Generated hash name: #{hash_name}"  # Debugging
 
     metadata = @cache.get(hash_name)
     unique_id = metadata[:unique_id] if metadata
-    puts "Cached metadata: #{metadata.inspect}"  # Debugging
 
     sleep 5 # Temp fix for CI
 
     # Check if file is saved in MinIO
     object_exists = s3_object_exists?(unique_id)
-    puts "Object exists in MinIO: #{object_exists}"  # Debugging
     assert object_exists, "File should be saved in MinIO"
 
     # Check if metadata is cached
@@ -57,11 +53,11 @@ class FileHandlerTest < Minitest::Test
   end
 
   def test_ttl_expiration
-    ttl = 2  # 2 seconds TTL
+    ttl = :t1  # 2 seconds TTL
     file_handler = FileHandler.new(@file, @cache, ttl)
     hash_name = file_handler.save
 
-    sleep(ttl + 3)  # Wait for TTL to expire
+    sleep(5)  # Wait for TTL to expire
 
     metadata = @cache.get(hash_name)
     assert_nil metadata, "Metadata should expire and be nil"

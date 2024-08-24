@@ -3,10 +3,21 @@ require 'securerandom'
 require_relative 's3_handler'
 
 class FileHandler
+  TTL = {
+    t0: 0, # No expiration
+    t1: 2, # 2 seconds
+    t2: 15, # 15 seconds
+    1 => 900, # 15 minutes
+    2 => 3600, # 1 hour
+    3 => 14400, # 4 hours
+    4 => 28800, # 8 hours
+    5 => 86400, # 1 day
+  }.freeze
+
   def initialize(file, cache, ttl = 0)
     @file = file
     @cache = cache
-    @ttl = ttl
+    @ttl = TTL[ttl] || TTL[1]
     @s3_handler = S3Handler.new
   end
 
@@ -17,11 +28,8 @@ class FileHandler
     unique_id = SecureRandom.uuid
     hash_name = generate_hashed_link(unique_id)
 
-    puts "Generated unique_id: #{unique_id}"  # Debugging
-    puts "Generated hash_name: #{hash_name}"  # Debugging
-
     begin
-      @s3_handler.upload_file(tempfile, unique_id)
+      @s3_handler.upload_file(tempfile, unique_id, @ttl)
       cache_metadata(hash_name, unique_id, filename)
       hash_name
     rescue => e

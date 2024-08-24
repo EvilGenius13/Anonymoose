@@ -21,11 +21,8 @@ class S3Handler
       body: tempfile,
       metadata: {
         'x-amz-meta-expiration' => expiration_date.iso8601
-      },
-      object_lock_mode: 'GOVERNANCE',
-      object_lock_retain_until_date: expiration_date.iso8601
+      }
     )
-
   rescue => e
     puts "Error uploading file to S3: #{e.message}"
     raise
@@ -42,11 +39,10 @@ class S3Handler
 
   def create_bucket_unless_exists
     unless bucket_exists?
-      @client.create_bucket(
-        bucket: @bucket,
-        object_lock_enabled_for_bucket: true
-      )
-      puts "Bucket #{@bucket} with object lock created."
+      @client.create_bucket(bucket: @bucket)
+      puts "Bucket #{@bucket} created."
+    else
+      puts "Bucket #{@bucket} already exists."
     end
   rescue Aws::S3::Errors::BucketAlreadyExists, Aws::S3::Errors::BucketAlreadyOwnedByYou
     puts "Bucket #{@bucket} already exists."

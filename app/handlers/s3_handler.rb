@@ -15,7 +15,6 @@ class S3Handler
 
   def upload_file(tempfile, unique_id, ttl)
     expiration_date = Time.now.utc + ttl
-    puts "Uploading file to MinIO with key: #{unique_id}"  # Debugging
     @client.put_object(
       bucket: @bucket,
       key: unique_id,
@@ -27,7 +26,6 @@ class S3Handler
       object_lock_retain_until_date: expiration_date.iso8601
     )
 
-    puts "File uploaded successfully."  # Debugging
   rescue => e
     puts "Error uploading file to S3: #{e.message}"
     raise

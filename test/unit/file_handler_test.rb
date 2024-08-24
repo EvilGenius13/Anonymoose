@@ -35,7 +35,7 @@ class FileHandlerTest < Minitest::Test
     ttl = :t2  # 15 seconds TTL
     file_handler = FileHandler.new(@file, @cache, ttl)
     hash_name = file_handler.save
-
+    puts hash_name
     assert hash_name, "Hash name should be generated"
 
     metadata = @cache.get(hash_name)

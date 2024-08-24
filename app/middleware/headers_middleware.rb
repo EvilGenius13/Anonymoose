@@ -25,8 +25,12 @@ class HeadersMiddleware
   private
 
   def extract_ip(env)
-    if env['HTTP_X_FORWARDED_FOR']
+    if env['HTTP_CF_CONNECTING_IP']
+      env['HTTP_CF_CONNECTING_IP']
+    elsif env['HTTP_X_FORWARDED_FOR']
       env['HTTP_X_FORWARDED_FOR'].split(',').first.strip
+    elsif env['HTTP_X_REAL_IP']
+      env['HTTP_X_REAL_IP']
     else
       env['REMOTE_ADDR']
     end

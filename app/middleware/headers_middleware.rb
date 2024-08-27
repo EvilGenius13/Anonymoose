@@ -5,11 +5,8 @@ class HeadersMiddleware
 
   def call(env)
     nonce = SecureRandom.base64
-
     Thread.current[:style_nonce] = nonce
-
     status, headers, response = @app.call(env)
-
     originating_ip = extract_ip(env)
 
     headers['Server'] = 'Anonymoose'

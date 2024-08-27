@@ -20,6 +20,9 @@ class LoggingMiddleware
     context.add_log_data(:duration, duration)
     context.add_log_data(:ip, env['REMOTE_ADDR'])
 
+    # Might be a temp log entry
+    context.add_log_data(:env, env)
+
     log_request(context)
 
     [status, headers, response]

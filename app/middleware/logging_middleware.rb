@@ -14,13 +14,7 @@ class LoggingMiddleware
     status, headers, response = @app.call(env)
     duration = Time.now - start_time
 
-    context.add_log_data(:method, env['REQUEST_METHOD'])
-    context.add_log_data(:path, env['PATH_INFO'])
-    context.add_log_data(:status, status)
-    context.add_log_data(:duration, duration)
-    context.add_log_data(:ip, env['REMOTE_ADDR'])
-
-    # Might be a temp log entry
+    # Might be a temp log entry but currently it has a ton of useful data
     context.add_log_data(:env, env)
 
     log_request(context)

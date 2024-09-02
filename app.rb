@@ -33,25 +33,36 @@ class Anonymoose < Sinatra::Base
     ttl = params[:expiration].to_i
     file = params[:file]
     context = env['request_context']
-
+  
     if file.nil?
       @error_message = 'No file received'
       return erb :upload
     end
-
+  
     file_size = file[:tempfile].size
     if file_size > MAX_UPLOAD_SIZE
       @error_message = "File size exceeds the maximum limit of #{MAX_UPLOAD_SIZE / 1024 / 1024} MB"
       return erb :upload
     end
-
+  
     if file
+      # Throttle upload speed to 50 KB/s
+      throttle_speed_kbps = 50
+      chunk_size = 1024 # 1 KB
+      tempfile = file[:tempfile]
+      
+      File.open(tempfile.path, 'rb') do |file|
+        while chunk = file.read(chunk_size)
+          sleep(chunk_size.to_f / (throttle_speed_kbps * 1024)) # Sleep to throttle speed
+        end
+      end
+      
       file_handler = FileHandler.new(file, env['cache'], ttl)
       hashed_link = file_handler.save
-
+  
       context.add_log_data(:file_size, file_size)
       context.add_log_data(:file_extension, File.extname(file[:filename]))
-
+  
       if hashed_link
         erb :upload_success, locals: { link: hashed_link }
       else

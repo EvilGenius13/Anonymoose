@@ -14,6 +14,9 @@ class LoggingMiddleware
     status, headers, response = @app.call(env)
     duration = Time.now - start_time
 
+    context.status = status
+    context.duration = duration
+    context.headers = headers
     # Might be a temp log entry but currently it has a ton of useful data
     context.add_log_data(:env, env)
 

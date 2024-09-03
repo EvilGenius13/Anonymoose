@@ -30,6 +30,8 @@ class Anonymoose < Sinatra::Base
   end
 
   post '/upload' do
+    puts "Received params: #{params.inspect}"
+
     ttl = params[:expiration].to_i
     file = params[:file]
     context = env['request_context']

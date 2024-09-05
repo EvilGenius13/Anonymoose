@@ -6,12 +6,10 @@
   <% if @error_message %>
     <p class="error"><%= @error_message %></p>
   <% end %>
-  <form action="/upload" method="post" enctype="multipart/form-data">
+  <form id="file-upload-form" action="/upload" method="post" enctype="multipart/form-data">
     <div class="field">
-      <button class="circle">
-        <i>attach_file</i>
-        <input type="file" id="upload-file" name="file">
-      </button>
+      <label for="upload-file">Choose a file:</label>
+      <input type="file" id="upload-file" name="file">
     </div>
     <div class="field">
       <label for="expiration">Choose expiration:</label>
@@ -23,6 +21,8 @@
         <option value="5">1 Day</option>
       </select>
     </div>
-    <button type="submit" class="round">Upload</button>
   </form>
 </article>
+
+<!-- FilePond -->
+<script src="/js/pond.js"></script>

@@ -1,4 +1,5 @@
-// public/js/pond3.js
+FilePond.registerPlugin(FilePondPluginFileValidateSize);
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('file-upload-form');
   
@@ -13,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (inputElement) {
     const pond = FilePond.create(inputElement, {
       allowMultiple: false,
+      allowFileSizeValidation: true,
+      maxFileSize: '5MB',
       maxFiles: 1,
       server: {
         process: {
@@ -29,11 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const jsonResponse = JSON.parse(response); // Parse the JSON response
             const link = jsonResponse.link;
 
+            const fullLink = `${window.location.origin}${link}`;
             // Show success message with the link dynamically
             const successMessage = `
               <div class="alert alert-success">
                 File uploaded successfully! Your link: 
-                <a href="${link}" target="_blank">${link}</a>
+                <a href="${fullLink}" target="_blank">${fullLink}</a>
               </div>
             `;
 

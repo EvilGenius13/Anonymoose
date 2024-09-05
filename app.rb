@@ -41,9 +41,6 @@ class Anonymoose < Sinatra::Base
     end
   
     file_size = file[:tempfile].size
-    if file_size > MAX_UPLOAD_SIZE
-      halt 413, 'File size exceeds the maximum limit'
-    end
   
     if file
       file_handler = FileHandler.new(file, env['cache'], ttl)

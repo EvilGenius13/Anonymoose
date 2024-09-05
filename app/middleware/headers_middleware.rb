@@ -34,6 +34,6 @@ class HeadersMiddleware
   end
 
   def csp_header(nonce)
-    "default-src 'self'; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-#{nonce}'; script-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
+    "default-src 'self'; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://unpkg.com 'nonce-#{nonce}'; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self';"
   end
 end

@@ -46,7 +46,13 @@ class AnonymooseTest < Minitest::Test
     post '/upload', { file: file, expiration: 1 }
 
     assert last_response.ok?
-    assert_includes last_response.body, 'Upload Success'
+
+    # Parse the JSON response
+    json_response = JSON.parse(last_response.body)
+
+    # Assert that the response contains a link
+    assert_includes json_response, 'link'
+    assert_match %r{^/uploads/}, json_response['link'], "Expected a valid link in the response"
   end
 
   private

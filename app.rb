@@ -30,41 +30,38 @@ class Anonymoose < Sinatra::Base
   end
 
   post '/upload' do
+    puts "Received params: #{params.inspect}"
+    
     ttl = params[:expiration].to_i
     file = params[:file]
     context = env['request_context']
-
+    
     if file.nil?
-      @error_message = 'No file received'
-      return erb :upload
+      halt 400, 'No file received'
     end
-
+  
     file_size = file[:tempfile].size
     if file_size > MAX_UPLOAD_SIZE
-      @error_message = "File size exceeds the maximum limit of #{MAX_UPLOAD_SIZE / 1024 / 1024} MB"
-      return erb :upload
+      halt 413, 'File size exceeds the maximum limit'
     end
-
+  
     if file
       file_handler = FileHandler.new(file, env['cache'], ttl)
       hashed_link = file_handler.save
-
+  
       context.add_log_data(:file_size, file_size)
       context.add_log_data(:file_extension, File.extname(file[:filename]))
-
+  
       if hashed_link
-        erb :upload_success, locals: { link: hashed_link }
+        content_type :json  # Ensure the response is JSON because we are using FilePond
+        { link: "/uploads/#{hashed_link}" }.to_json  # Return JSON with the file link which FilePond will push to the client
       else
-        puts "File upload failed"
-        @error_message = "File upload failed. Please upload a valid file."
-        erb :upload
+        halt 500, 'File upload failed. Please try again.'
       end
-    else
-      puts "No file received"
-      @error_message = "No file received"
-      erb :upload
     end
   end
+  
+  
 
   get '/uploads/:hash' do
     hash = params[:hash]

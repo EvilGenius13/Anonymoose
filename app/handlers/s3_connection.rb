@@ -5,7 +5,7 @@ module S3Connection
   @bucket_name = ENV['S3_BUCKET'] || 'development-bucket'
 
   def self.client
-    Aws::S3::Client.new(
+    @client ||= Aws::S3::Client.new(
       endpoint: ENV['S3_ENDPOINT'] || 'http://localhost:9000',
       region: ENV['S3_REGION'] || 'us-east-1',
       access_key_id: ENV['S3_ACCESS_KEY_ID'] || 'development',
@@ -22,19 +22,23 @@ module S3Connection
     @client = nil
   end
 
-  private
-
-  def self.create_bucket_unless_exists
-    unless bucket_exists?
-      client.create_bucket(bucket: @bucket_name)
-      puts "Bucket #{@bucket_name} created."
-    end
-  end
-
   def self.bucket_exists?
     client.head_bucket(bucket: @bucket_name)
     true
   rescue Aws::S3::Errors::NotFound
     false
   end
+
+  def self.ensure_bucket_exists
+    unless bucket_exists?
+      client.create_bucket(bucket: @bucket_name)
+      puts "Bucket #{@bucket_name} created."
+    else
+      puts "Bucket #{@bucket_name} already exists."
+    end
+  rescue Aws::S3::Errors::BucketAlreadyExists, Aws::S3::Errors::BucketAlreadyOwnedByYou
+    puts "Bucket #{@bucket_name} already exists."
+  end
+
+  ensure_bucket_exists
 end

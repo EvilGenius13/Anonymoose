@@ -105,9 +105,7 @@ class Anonymoose < Sinatra::Base
     begin
       resp = s3_handler.download_file(unique_id)
       file_data = resp.body.read
-
-      # Debugging: Check the first few bytes of the file data
-      puts "File content preview: #{file_data[0, 100].inspect}"
+      puts "Downloaded file with size: #{file_data.size}"
 
       file_data
     rescue => e

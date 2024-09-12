@@ -6,3 +6,5 @@ steps:
       - scripts/deploy.sh
     env:
       KUBECONFIG: /home/ubuntu/.kube/config
+notify:
+  - webhook: "${DISCORD_WEBHOOK_URL}"

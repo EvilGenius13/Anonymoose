@@ -23,6 +23,10 @@ spec:
         env:
         - name: MEMCACHED_ADDRESS
           value: "memcached:11211"
+        - name: RACK_ENV
+          value: "production"
+        - name: SERVER
+          value: "falcon"
         - name: MEMCACHED_USERNAME
           valueFrom:
             secretKeyRef:

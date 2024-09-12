@@ -12,3 +12,8 @@ desc "Run the app in development mode"
 task :dev do
   sh "bundle exec puma -C config/puma.rb"
 end
+
+desc "Run the app in falcon configuration"
+task :falcon do
+  sh "bundle exec falcon serve --bind http://localhost:9292"
+end

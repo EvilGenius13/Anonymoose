@@ -19,3 +19,22 @@ services:
       - ./minio/data:/data
       - ./minio/config:/root/.minio
     command: server /data --console-address ":9001"
+
+  # Uncomment the following block to run the development version of the app
+  # anonymoose:
+  #   image: evilgenius13/anonymoose:dev
+  #   ports:
+  #     - "9292:9292"
+  #   environment:
+  #     MEMCACHED_ADDRESS: memcached:11211
+  #     RACK_ENV: development
+  #     SERVER: falcon
+  #     MEMCACHED_USERNAME: dev
+  #     MEMCACHED_PASSWORD: dev
+  #     AXIOM_DATASET: development
+  #     AXIOM_API_TOKEN: development
+  #     S3_ENDPOINT: http://minio:9000
+  #     S3_REGION: development
+  #     S3_ACCESS_KEY_ID: development
+  #     S3_SECRET_ACCESS_KEY: development
+  #     S3_BUCKET: development

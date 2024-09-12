@@ -49,14 +49,17 @@ COPY --from=builder /usr/local/bundle /usr/local/bundle
 # Ensure bundler is available in the production stage
 RUN gem install bundler
 
-# Copy the config directory to ensure puma.rb is included
+# Copy the config directory to grab puma configuration
 COPY config /app/config
+
+# Copy the entrypoint script
+COPY app/scripts/entrypoint.sh /app/entrypoint.sh
+
+# Make sure the entrypoint script has execute permission
+RUN chmod +x /app/entrypoint.sh
 
 # Expose the port the app runs on
 EXPOSE 9292
 
-# Define environment variable
-ENV RACK_ENV production
-
-# Command to run the application
-CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+# Set the entrypoint script
+ENTRYPOINT ["/app/entrypoint.sh"]

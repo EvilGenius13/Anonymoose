@@ -53,7 +53,7 @@ RUN gem install bundler
 COPY config /app/config
 
 # Copy the entrypoint script
-COPY entrypoint.sh /app/entrypoint.sh
+COPY app/scripts/entrypoint.sh /app/entrypoint.sh
 
 # Make sure the entrypoint script has execute permission
 RUN chmod +x /app/entrypoint.sh

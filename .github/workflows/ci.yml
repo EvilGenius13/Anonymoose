@@ -52,6 +52,8 @@ jobs:
           MINIO_ENDPOINT: http://localhost:9000
           MINIO_ACCESS_KEY: development
           MINIO_SECRET_KEY: development
+          SERVER: falcon
+          RACK_ENV: test
         run: |
           bundle exec rake test
 

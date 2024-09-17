@@ -7,12 +7,17 @@ steps:
     env:
       KUBECONFIG: /home/ubuntu/.kube/config
     key: "deploy-step"
+    # Capture the exit status and store it in metadata
+    on_exit: |
+      buildkite-agent meta-data set "deploy-exit-status" "$BUILDKITE_COMMAND_EXIT_STATUS"
 
   - label: ":satellite: Notify Discord"
     depends_on: "deploy-step"
     commands:
       - |
-        if [ "${BUILDKITE_COMMAND_EXIT_STATUS}" -eq 0 ]; then
+        # Get the exit status from the previous step
+        exit_status=$(buildkite-agent meta-data get "deploy-exit-status")
+        if [ "$exit_status" -eq 0 ]; then
           curl -X POST "${DISCORD_WEBHOOK_URL}" \
           -H "Content-Type: application/json" \
           -d '{"content": "Deployment successful :rocket:"}'

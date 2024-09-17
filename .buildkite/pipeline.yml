@@ -4,12 +4,13 @@ steps:
       - git clone https://github.com/EvilGenius13/Anonymoose.git
       - cd Anonymoose
       - scripts/deploy.sh
+      - |
+        # Capture the exit status and store it in metadata
+        exit_status=$?
+        buildkite-agent meta-data set "deploy-exit-status" "$exit_status"
     env:
       KUBECONFIG: /home/ubuntu/.kube/config
     key: "deploy-step"
-    # Capture the exit status and store it in metadata
-    on_exit: |
-      buildkite-agent meta-data set "deploy-exit-status" "$BUILDKITE_COMMAND_EXIT_STATUS"
 
   - label: ":satellite: Notify Discord"
     depends_on: "deploy-step"

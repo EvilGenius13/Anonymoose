@@ -8,7 +8,7 @@ steps:
 
   - wait:
     continue_on_failure: true
-    
+
   - label: "Send Discord Notification"
     command: |
       if [ "$(buildkite-agent step get "outcome" --step "deploy-step")" == "passed" ]; then
@@ -19,3 +19,4 @@ steps:
         curl -X POST "${DISCORD_WEBHOOK_URL}" \
         -H "Content-Type: application/json" \
         -d '{"content": "Deployment failed :x:"}'
+      fi

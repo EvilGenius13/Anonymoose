@@ -15,43 +15,26 @@ export KUBECONFIG=/home/ubuntu/.kube/config
 if [ -d "$REPO_DIR" ]; then
   echo "Repository already exists. Pulling the latest changes..."
   cd $REPO_DIR
-  git pull origin main
+  git pull origin main || exit 1
 else
   echo "Cloning the repository..."
-  git clone $REPO_URL
+  git clone $REPO_URL || exit 1
   cd $REPO_DIR
 fi
 
-# Debugging and clarity
-pwd
-ls -R
-
-# Print the contents of the KUBECONFIG file
-echo "Contents of KUBECONFIG ($KUBECONFIG):"
-cat $KUBECONFIG
-
-# Debugging step to ensure KUBECONFIG is set correctly
-echo "Using KUBECONFIG: $KUBECONFIG"
-kubectl config view
-
-# Print the current context
-echo "Current context:"
-kubectl config current-context
-
-# Verify kubectl can connect to the cluster
-echo "Getting nodes:"
-kubectl get nodes
-
-# Apply Kubernetes manifests regardless of changes
+# Apply Kubernetes manifests
 echo "Applying Kubernetes manifests..."
-kubectl apply -f deployment/production/minio-pv-pvc.yml -n ${NAMESPACE}
-kubectl apply -f deployment/production/memcache_deployment.yml -n ${NAMESPACE}
-kubectl apply -f deployment/production/minio_deployment.yml -n ${NAMESPACE}
-kubectl apply -f deployment/production/app_deployment.yml -n ${NAMESPACE}
+kubectl apply -f deployment/production/minio-pv-pvc.yml -n ${NAMESPACE} || exit 1
+kubectl apply -f deployment/production/memcache_deployment.yml -n ${NAMESPACE} || exit 1
+kubectl apply -f deployment/production/minio_deployment.yml -n ${NAMESPACE} || exit 1
+kubectl apply -f deployment/production/app_deployment.yml -n ${NAMESPACE} || exit 1
 
-# Always set the image to the latest version
+# Update the deployment image
 echo "Updating deployment image..."
-kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE} -n ${NAMESPACE}
+kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE} -n ${NAMESPACE} || exit 1
 
 # Optional: restart the deployment to ensure it picks up the new image
-kubectl rollout restart deployment/${DEPLOYMENT_NAME} -n ${NAMESPACE}
+kubectl rollout restart deployment/${DEPLOYMENT_NAME} -n ${NAMESPACE} || exit 1
+
+echo "Deployment successful!"
+exit 0

@@ -5,9 +5,7 @@ steps:
       - cd Anonymoose
       - scripts/deploy.sh
       - |
-        EXIT_STATUS=$?
-        echo "Buildkite command exit status: $EXIT_STATUS"
-        if [ "$EXIT_STATUS" -eq 0 ]; then
+        if [ $? -eq 0 ]; then
           curl -X POST "${DISCORD_WEBHOOK_URL}" \
           -H "Content-Type: application/json" \
           -d '{"content": "Deployment successful :rocket:"}'

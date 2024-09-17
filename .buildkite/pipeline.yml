@@ -4,29 +4,18 @@ steps:
       - git clone https://github.com/EvilGenius13/Anonymoose.git
       - cd Anonymoose
       - scripts/deploy.sh
-      - |
-        # Capture the exit status and store it in metadata
-        exit_status=$?
-        echo "Exit status is: $exit_status"  # Debugging output
-        buildkite-agent meta-data set "deploy-exit-status" "$exit_status"
-    env:
-      KUBECONFIG: /home/ubuntu/.kube/config
     key: "deploy-step"
 
-  - label: ":satellite: Notify Discord"
-    depends_on: "deploy-step"
-    commands:
-      - |
-        # Debugging output for the webhook URL
-        echo "DISCORD_WEBHOOK_URL is: ${DISCORD_WEBHOOK_URL}"
-        # Get the exit status from the previous step
-        exit_status=$(buildkite-agent meta-data get "deploy-exit-status")
-        echo "Retrieved exit status: $exit_status"  # Debugging output
-        if [ "$exit_status" -eq 0 ]; then
-          curl -X POST "${DISCORD_WEBHOOK_URL}" \
-          -H "Content-Type: application/json" \
-          -d '{"content": "Deployment successful :rocket:"}'
-        else
-          curl -X POST "${DISCORD_WEBHOOK_URL}" \
-          -H "Content-Type: application/json" \
-          -d '{"content": "Deployment failed :x:"}'
+  - wait:
+    continue_on_failure: true
+    
+  - label: "Send Discord Notification"
+    command: |
+      if [ "$(buildkite-agent step get "outcome" --step "deploy-step")" == "passed" ]; then
+        curl -X POST "${DISCORD_WEBHOOK_URL}" \
+        -H "Content-Type: application/json" \
+        -d '{"content": "Deployment successful :rocket:"}'
+      else
+        curl -X POST "${DISCORD_WEBHOOK_URL}" \
+        -H "Content-Type: application/json" \
+        -d '{"content": "Deployment failed :x:"}'
